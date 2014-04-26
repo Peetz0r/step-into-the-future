@@ -1,4 +1,3 @@
-int pin_led = 13;
 int pin_hall = 2;
 
 volatile int last_millis = 0;
@@ -15,9 +14,8 @@ void update_speed() {
 }
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   pinMode(2, INPUT_PULLUP);
-  pinMode(13, OUTPUT); 
   attachInterrupt(0, update_speed, RISING);
 }
 
