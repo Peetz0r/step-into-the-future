@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Step into the Future - test</title>
+	</head>
+	<body>
+		<button onclick="update_speed()">Sensor</button>
+		<h1></h1>
+		<h2></h2>
+		<h3>This is a Javascript simulator beloning to <a href="https://github.com/Peetz0r/step-into-the-future/">Step into the Future</a>.</h3>
+		<script>
+			last_millis = 0;
+			last_speed = 0;
+			display_speed = 0;
+
+			h1 = document.querySelector('h1');
+			h2 = document.querySelector('h2');
+
+			// this function is the interrupt executen on each rising edge coming from the hall sensor
+			function update_speed() {
+				var current_millis = (new Date).getTime();
+				var rev_millis = current_millis - last_millis;
+				last_millis = current_millis;
+				if (rev_millis > 10 && rev_millis < 1000) {
+					var speed_kph = 1 / rev_millis * 2206;
+					h2.innerHTML = speed_kph.toFixed(2) + " km/h\tdelta: "+ (speed_kph - last_speed).toFixed(2);
+					last_speed = speed_kph;
+				}
+			}
+
+			// the loop function is supposed to smooth the readings
+			function loop() {
+				var delta = last_speed - display_speed;
+				display_speed += delta/100; // this '100' value might need to be fiddled with
+				h1.innerHTML = display_speed.toFixed(2) + " km/h\tdelta: "+ delta.toFixed(2);
+
+				var current_millis = (new Date).getTime();
+				var idle_millis = current_millis - last_millis;
+				if(idle_millis > 1000) {
+					last_speed = 0;
+				}
+			}
+
+			setInterval(loop, 10);
+		</script>
+	</body>
+</html>
+
