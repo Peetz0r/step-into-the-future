@@ -41,14 +41,14 @@
 					current_speed = 1 / rev_millis * 2206;
 
 					// debug info
-					h2.innerHTML = speed_kph.toFixed(2) + " km/h";
+					h2.innerHTML = current_speed.toFixed(2) + " km/h";
 				}
 			}
 
 			// the loop function is supposed to smooth the readings
 			function loop() {
 				// adjust the display speed a little bit towards the actual value
-				display_speed += (last_speed - display_speed) / 2000;
+				display_speed += (current_speed - display_speed) / 200; // this value must be defferent on the Arduino
 
 				// debug info
 				h1.innerHTML = display_speed.toFixed(2) + " km/h";
@@ -59,9 +59,12 @@
 				var idle_millis = current_millis - last_millis;
 
 				// if the last interrupt is longer ago than 2 revolutions (with a maximum of 2 seconds)
-				if(idle_millis > Math.min(rev_millis, 1000)) {
+				if(idle_millis > Math.min(rev_millis*2, 1000)) {
 					// assume we are not moving, set current speed to 0
-					last_speed = 0;
+					current_speed = 0;
+
+					// debug info
+					h2.innerHTML = current_speed.toFixed(2) + " km/h";
 				}
 
 				// calculate led strip color
