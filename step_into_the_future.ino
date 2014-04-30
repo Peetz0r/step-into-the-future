@@ -32,7 +32,7 @@ void setup() {
 // the loop function is supposed to smooth the readings
 void loop() {
   // adjust the display speed a little bit towards the actual value
-  display_speed += (current_speed - display_speed)/2000;
+  display_speed += (current_speed - display_speed) / 2000;
 
   // get the current time
   long current_micros = micros();
@@ -40,7 +40,7 @@ void loop() {
   long idle_micros = current_micros - last_micros;
 
   // if the last interrupt is longer ago than 2 revolutions (with a maximum of 2 seconds)
-  if(idle_micros > max(1000, rev_micros*2)) {
+  if(idle_micros > min(1000, rev_micros*2)) {
     // assume we are not moving, set current speed to 0
     current_speed = 0;
   }
