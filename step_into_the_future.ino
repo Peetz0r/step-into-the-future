@@ -1,22 +1,22 @@
-volatile long last_micros = 0;
+volatile long last_millis = 0;
 volatile float current_speed = 0;
-volatile float rev_micros = 0;
+volatile float rev_millis = 0;
 float display_speed = 0;
 long count = 0;
 
 // this function is the interrupt executed on each rising edge coming from the hall sensor
 void update_speed() {
   // get current time
-  long current_micros = micros();
+  long current_millis = millis();
   // caculate difference
-  rev_micros = current_micros - last_micros;
+  rev_millis = current_millis - last_millis;
   // store current time for next time
-  last_micros = current_micros;
+  last_millis = current_millis;
 
   // sanity check (will fail when the sketch had just started, and also debounces the input)
-  if(rev_micros > 10000 && rev_micros < 1000000) {
+  if(rev_millis > 10 && rev_millis < 1000) {
     // magic calulation happens here
-    current_speed = 1 / rev_micros * 2206000;
+    current_speed = 1 / rev_millis * 2206;
   }
 }
 
@@ -35,12 +35,12 @@ void loop() {
   display_speed += (current_speed - display_speed) / 2000;
 
   // get the current time
-  long current_micros = micros();
+  long current_millis = millis();
   // calculate difference
-  long idle_micros = current_micros - last_micros;
+  long idle_millis = current_millis - last_millis;
 
   // if the last interrupt is longer ago than 2 revolutions (with a maximum of 2 seconds)
-  if(idle_micros > min(1000, rev_micros*2)) {
+  if(idle_millis > min(1000, rev_millis*2)) {
     // assume we are not moving, set current speed to 0
     current_speed = 0;
   }
