@@ -38,7 +38,7 @@ void loop() {
   long current_millis = millis();
   // calculate difference
   long idle_millis = current_millis - last_millis;
-  
+
   int value = max(0, (255-(display_speed*10)));
   analogWrite(11, value);
 
@@ -52,9 +52,10 @@ void loop() {
   if (count > 500) {
     if (display_speed > 0.1) {
       count = 0;
-      Serial.print(display_speed);
-      Serial.print(" km/h\n");
+      Serial.print(display_speed, 1);
+      Serial.println(" km/h");
     }
   }
   delay(10);
 }
+
