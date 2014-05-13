@@ -32,7 +32,7 @@ void setup() {
 // the loop function is supposed to smooth the readings
 void loop() {
   // adjust the display speed a little bit towards the actual value
-  display_speed += (current_speed - display_speed) / 100;
+  display_speed += (current_speed - display_speed) / 10;
 
   // get the current time
   long current_millis = millis();
