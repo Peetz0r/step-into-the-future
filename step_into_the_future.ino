@@ -14,7 +14,7 @@ void update_speed() {
   last_millis = current_millis;
 
   // sanity check (will fail when the sketch had just started, and also debounces the input)
-  if(rev_millis > 10 && rev_millis < 1000) {
+  if (rev_millis > 10 && rev_millis < 1000) {
     // magic calulation happens here
     current_speed = 1 / rev_millis * 2206;
   }
@@ -32,26 +32,29 @@ void setup() {
 // the loop function is supposed to smooth the readings
 void loop() {
   // adjust the display speed a little bit towards the actual value
-  display_speed += (current_speed - display_speed) / 2000;
+  display_speed += (current_speed - display_speed) / 100;
 
   // get the current time
   long current_millis = millis();
   // calculate difference
   long idle_millis = current_millis - last_millis;
+  
+  int value = max(0, (255-(display_speed*10)));
+  analogWrite(11, value);
 
-  // if the last interrupt is longer ago than 2 revolutions (with a maximum of 2 seconds)
-  if(idle_millis > min(1000, rev_millis*2)) {
+  // if the last interrupt is more than 500 milliseconds ago
+  if (idle_millis > 500) {
     // assume we are not moving, set current speed to 0
     current_speed = 0;
   }
 
-  // start debug code
   count++;
-  if(count > 500)
-  {
-    count = 0;
-    Serial.print(display_speed);
-    Serial.print("\n");
+  if (count > 500) {
+    if (display_speed > 0.1) {
+      count = 0;
+      Serial.print(display_speed);
+      Serial.print(" km/h\n");
+    }
   }
-  // end debug code
+  delay(10);
 }
